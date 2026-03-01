@@ -20,17 +20,35 @@ public class CurriculoController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(@RequestParam("foto") MultipartFile file) {
+    public ResponseEntity<?> upload(
+            @RequestParam("nome") String nome,
+            @RequestParam("email") String email,
+            @RequestParam("telefone") String telefone,
+            @RequestParam("formacao") String formacao,
+            @RequestParam("experiencia") String experiencia,
+            @RequestParam("foto") MultipartFile file) {
 
         try {
+
+            if (!file.getContentType().startsWith("image/")) {
+                return ResponseEntity.badRequest().body("Apenas imagens são permitidas");
+            }
+
             String url = s3Service.uploadFile(file);
+
             return ResponseEntity.ok(Map.of(
-                    "mensagem", "Upload realizado com sucesso",
+                    "mensagem", "Currículo enviado com sucesso",
+                    "nome", nome,
+                    "email", email,
+                    "telefone", telefone,
+                    "formacao", formacao,
+                    "experiencia", experiencia,
                     "urlImagem", url
             ));
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao enviar arquivo para o S3");
+                    .body("Erro ao enviar currículo");
         }
     }
 }
