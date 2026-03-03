@@ -30,14 +30,10 @@ public class CurriculoController {
 
         try {
 
-            if (!file.getContentType().startsWith("image/")) {
-                return ResponseEntity.badRequest().body("Apenas imagens são permitidas");
-            }
-
             String url = s3Service.uploadFile(file);
 
             return ResponseEntity.ok(Map.of(
-                    "mensagem", "Currículo enviado com sucesso",
+                    "mensagem", "Arquivo enviado com sucesso",
                     "nome", nome,
                     "email", email,
                     "telefone", telefone,
@@ -48,7 +44,7 @@ public class CurriculoController {
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao enviar currículo");
+                    .body("Erro ao enviar o Arquivo");
         }
     }
 }
